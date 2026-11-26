@@ -518,7 +518,7 @@ export default {
 			const requestedUnit = url.searchParams.get('unit')?.trim().toLowerCase();
 			const temperatureUnit: TemperatureUnit = requestedUnit === 'fahrenheit' ? 'fahrenheit' : 'celsius';
 			const requestedTimeFormat = url.searchParams.get('time_format')?.trim().toLowerCase();
-			const timeFormat: TimeFormat = requestedTimeFormat === '12h' || requestedTimeFormat === '24h' ? requestedTimeFormat : 'auto';
+			const timeFormat: TimeFormat = requestedTimeFormat === '12h' ? '12h' : '24h';
 			const requestedCountryCode = url.searchParams.get('country_code')?.trim().toUpperCase() ?? 'GB';
 			const countryCode = /^[A-Z]{2}$/.test(requestedCountryCode) ? requestedCountryCode : 'GB';
 			const requestedStep = Number.parseInt(url.searchParams.get('hourly_step') ?? '', 10);

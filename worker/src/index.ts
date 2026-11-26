@@ -24,8 +24,10 @@ const HEIGHT = 800;
 const ROW_BYTES = WIDTH / 8;
 const DEFAULT_LOCATION = { latitude: 52.52, longitude: 13.405, name: 'Berlin' };
 const HOURLY_FORECAST_COUNT = 4;
-const HOURLY_ICON_POSITIONS: Array<[number, number]> = [[385.5, 156], [492, 156], [598.5, 156], [704, 156]];
-const HOURLY_COLUMN_CENTERS = [409.5, 516, 622.5, 728];
+const HOURLY_COLUMN_CENTERS = [373, 489, 605, 721];
+const HOURLY_ICON_POSITIONS: Array<[number, number]> = HOURLY_COLUMN_CENTERS.map((center) => [center - 24, 166]);
+const DEFAULT_HOURLY_STEP = 2;
+const MAX_HOURLY_STEP = 6;
 
 type RecordValue = Record<string, unknown>;
 
@@ -50,6 +52,7 @@ interface WeatherData {
 		minimumTemperature: number[];
 		sunrise: string[];
 		sunset: string[];
+		precipitationSum: number[];
 	};
 }
 
@@ -123,6 +126,7 @@ function parseWeatherResponse(value: unknown): WeatherData {
 			minimumTemperature: getNumberArray(daily.temperature_2m_min, 'daily.temperature_2m_min'),
 			sunrise: getStringArray(daily.sunrise, 'daily.sunrise'),
 			sunset: getStringArray(daily.sunset, 'daily.sunset'),
+			precipitationSum: getNumberArray(daily.precipitation_sum, 'daily.precipitation_sum'),
 		},
 	};
 }
@@ -135,7 +139,7 @@ async function fetchWeather(latitude: number, longitude: number, temperatureUnit
 	weatherUrl.searchParams.set('longitude', String(longitude));
 	weatherUrl.searchParams.set('current', 'temperature_2m,weather_code,is_day');
 	weatherUrl.searchParams.set('hourly', 'temperature_2m,precipitation_probability,weather_code,is_day');
-	weatherUrl.searchParams.set('daily', 'weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset');
+	weatherUrl.searchParams.set('daily', 'weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset,precipitation_sum');
 	weatherUrl.searchParams.set('timezone', 'auto');
 	weatherUrl.searchParams.set('forecast_days', '4');
 	weatherUrl.searchParams.set('temperature_unit', temperatureUnit);
@@ -144,6 +148,10 @@ async function fetchWeather(latitude: number, longitude: number, temperatureUnit
 	});
 	if (!response.ok) throw new Error(`Open-Meteo returned HTTP ${response.status}`);
 	return parseWeatherResponse(await response.json());
+}
+
+function formatRainAmount(value: number): string {
+	return value < 10 ? value.toFixed(1) : String(Math.round(value));
 }
 
 function formatTemperature(value: number): string {
@@ -303,24 +311,24 @@ function insertWeatherIcons(
 	hourly: Array<{ weatherCode: number; isDay: boolean }>,
 	daily: Array<{ weatherCode: number; isDay: boolean }>,
 ): string {
-	const dailyPositions = [[620, 334], [620, 374], [620, 414]];
+	const dailyPositions = [[545, 306], [545, 352], [545, 398]];
 	if (hourly.length !== HOURLY_ICON_POSITIONS.length || daily.length !== dailyPositions.length) {
 		throw new Error('weather icon positions do not match the data template');
 	}
 
 	const icons: Array<[string, string]> = [
 		['icon-location', placeWeatherIcon(navigation, 736, 40, 24)],
-		['icon-hour-now', placeWeatherIcon(selectWeatherIcon(weather.current.weatherCode, weather.current.isDay), 40, 156, 48)],
+		['icon-hour-now', placeWeatherIcon(selectWeatherIcon(weather.current.weatherCode, weather.current.isDay), 40, 166, 48)],
 		...hourly.map((forecast, index) => [
 			`icon-hour-${index + 1}`,
 			placeWeatherIcon(selectWeatherIcon(forecast.weatherCode, forecast.isDay), HOURLY_ICON_POSITIONS[index][0], HOURLY_ICON_POSITIONS[index][1], 48),
 		] as [string, string]),
-		['icon-umbrella', placeWeatherIcon(umbrella, 83, 322, 24)],
-		['icon-sunrise', placeWeatherIcon(sunrise, 225, 322, 24)],
-		['icon-sunset', placeWeatherIcon(sunset, 367, 322, 24)],
+		['icon-umbrella', placeWeatherIcon(umbrella, 99, 312, 32)],
+		['icon-sunrise', placeWeatherIcon(sunrise, 218, 318, 32)],
+		['icon-sunset', placeWeatherIcon(sunset, 218, 386, 32)],
 		...daily.map((forecast, index) => [
 			`icon-forecast-${index + 1}`,
-			placeWeatherIcon(selectWeatherIcon(forecast.weatherCode, forecast.isDay), dailyPositions[index][0], dailyPositions[index][1], 24),
+			placeWeatherIcon(selectWeatherIcon(forecast.weatherCode, forecast.isDay), dailyPositions[index][0], dailyPositions[index][1], 32),
 		] as [string, string]),
 	];
 
@@ -348,10 +356,10 @@ function rotateLandscapeSvgToPortrait(svg: string): string {
 	return `${portraitTag}${defs}<g transform="matrix(0 1 -1 0 480 0)">${content}</g></svg>`;
 }
 
-function renderSvg(weather: WeatherData, locationName: string, timeFormat: TimeFormat, countryCode: string): string {
+function renderSvg(weather: WeatherData, locationName: string, timeFormat: TimeFormat, countryCode: string, hourlyStep: number): string {
 	const currentHourIndex = findCurrentHourIndex(weather.current.time, weather.hourly.time);
 	const hourly = Array.from({ length: HOURLY_FORECAST_COUNT }, (_, index) => {
-		const hourIndex = Math.min(currentHourIndex + index + 1, weather.hourly.time.length - 1);
+		const hourIndex = Math.min(currentHourIndex + (index + 1) * hourlyStep, weather.hourly.time.length - 1);
 		return {
 			time: formatHour(weather.hourly.time[hourIndex], timeFormat, countryCode, true),
 			temperature: formatTemperature(weather.hourly.temperature[hourIndex]),
@@ -373,12 +381,10 @@ function renderSvg(weather: WeatherData, locationName: string, timeFormat: TimeF
 		['hour-now', formatHour(weather.current.time, timeFormat, countryCode)],
 		['text-hour-now', formatTemperature(weather.current.temperature)],
 		['text-high-low', `H: ${formatTemperature(weather.daily.maximumTemperature[0])} L: ${formatTemperature(weather.daily.minimumTemperature[0])}`],
-		['chance-of-rain', `${Math.round(weather.hourly.precipitationProbability[currentHourIndex])}%`, 95],
-		['chance-of-rain-title', 'RAIN', 95],
-		['sunrise-time', formatHour(weather.daily.sunrise[0], timeFormat, countryCode), 237],
-		['sunrise-title', 'SUNRISE', 237],
-		['sunset-time', formatHour(weather.daily.sunset[0], timeFormat, countryCode), 379],
-		['sunset-title', 'SUNSET', 379],
+		['chance-of-rain', `${Math.round(weather.hourly.precipitationProbability[currentHourIndex])}%`, 115],
+		['rain-amount', `${formatRainAmount(weather.daily.precipitationSum[0])} mm`, 115],
+		['sunrise-time', formatHour(weather.daily.sunrise[0], timeFormat, countryCode)],
+		['sunset-time', formatHour(weather.daily.sunset[0], timeFormat, countryCode)],
 	];
 	for (let index = 0; index < hourly.length; index++) {
 		textReplacements.push([`hour-${index + 1}`, hourly[index].time, HOURLY_COLUMN_CENTERS[index]]);
@@ -443,9 +449,9 @@ function createBmp(pixels: Uint8Array, width: number, height: number): ArrayBuff
 	return buffer;
 }
 
-async function createWeatherBmp(weather: WeatherData, locationName: string, timeFormat: TimeFormat, countryCode: string): Promise<ArrayBuffer> {
+async function createWeatherBmp(weather: WeatherData, locationName: string, timeFormat: TimeFormat, countryCode: string, hourlyStep: number): Promise<ArrayBuffer> {
 	await initializeWasm();
-	const renderer = new Resvg(renderSvg(weather, locationName, timeFormat, countryCode), {
+	const renderer = new Resvg(renderSvg(weather, locationName, timeFormat, countryCode, hourlyStep), {
 		background: '#ffffff',
 		fitTo: { mode: 'original' },
 		font: {
@@ -515,8 +521,10 @@ export default {
 			const timeFormat: TimeFormat = requestedTimeFormat === '12h' || requestedTimeFormat === '24h' ? requestedTimeFormat : 'auto';
 			const requestedCountryCode = url.searchParams.get('country_code')?.trim().toUpperCase() ?? 'GB';
 			const countryCode = /^[A-Z]{2}$/.test(requestedCountryCode) ? requestedCountryCode : 'GB';
+			const requestedStep = Number.parseInt(url.searchParams.get('hourly_step') ?? '', 10);
+			const hourlyStep = Number.isFinite(requestedStep) ? Math.min(Math.max(requestedStep, 1), MAX_HOURLY_STEP) : DEFAULT_HOURLY_STEP;
 			const weather = await fetchWeather(latitude, longitude, temperatureUnit);
-			const bmp = await createWeatherBmp(weather, locationName, timeFormat, countryCode);
+			const bmp = await createWeatherBmp(weather, locationName, timeFormat, countryCode, hourlyStep);
 			return new Response(bmp, {
 				headers: {
 					'Cache-Control': 'no-store',

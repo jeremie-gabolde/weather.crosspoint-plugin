@@ -20,23 +20,23 @@
 <text id="hour-4" fill="black" style="white-space: pre" xml:space="preserve" font-family="Inter" font-size="36" font-weight="600" letter-spacing="0em"><tspan x="721" y="150">14:00</tspan></text>
 <g id="icon-hour-4"></g>
 <text id="temperature-hour-4" fill="black" style="white-space: pre" xml:space="preserve" font-family="Inter" font-size="36" font-weight="600" letter-spacing="0em"><tspan x="721" y="262">22&#xb0;</tspan></text>
-<rect x="40" y="300" width="150" height="136" rx="12" stroke="black" stroke-width="2"/>
+<rect x="40" y="300" width="200" height="136" rx="12" stroke="black" stroke-width="2"/>
 <g id="icon-umbrella"></g>
-<text id="chance-of-rain" fill="black" style="white-space: pre" xml:space="preserve" font-family="Inter" font-size="36" font-weight="600" letter-spacing="0em"><tspan x="115" y="384">20%</tspan></text>
-<text id="rain-amount" fill="black" style="white-space: pre" xml:space="preserve" font-family="Inter" font-size="36" font-weight="600" letter-spacing="0em"><tspan x="115" y="424">3.2 mm</tspan></text>
-<rect x="204" y="300" width="222" height="136" rx="12" stroke="black" stroke-width="2"/>
+<text id="chance-of-rain" fill="black" style="white-space: pre" xml:space="preserve" font-family="Inter" font-size="36" font-weight="600" letter-spacing="0em"><tspan x="140" y="384">20%</tspan></text>
+<text id="rain-amount" fill="black" style="white-space: pre" xml:space="preserve" font-family="Inter" font-size="36" font-weight="600" letter-spacing="0em"><tspan x="140" y="424">3.2 mm</tspan></text>
+<rect x="254" y="300" width="200" height="136" rx="12" stroke="black" stroke-width="2"/>
 <g id="icon-sunrise"></g>
 <g id="icon-sunset"></g>
-<text id="sunrise-time" fill="black" style="white-space: pre" xml:space="preserve" font-family="Inter" font-size="36" font-weight="600" letter-spacing="0em"><tspan x="262" y="347">08:34</tspan></text>
-<text id="sunset-time" fill="black" style="white-space: pre" xml:space="preserve" font-family="Inter" font-size="36" font-weight="600" letter-spacing="0em"><tspan x="262" y="415">21:03</tspan></text>
-<rect x="442" y="296" width="1" height="143" fill="black"/>
-<text id="day-forecast-1" fill="black" style="white-space: pre" xml:space="preserve" font-family="Inter" font-size="36" font-weight="600" letter-spacing="0em"><tspan x="460" y="335">Thu</tspan></text>
+<text id="sunrise-time" fill="black" style="white-space: pre" xml:space="preserve" font-family="Inter" font-size="36" font-weight="600" letter-spacing="0em"><tspan x="306" y="347">08:34</tspan></text>
+<text id="sunset-time" fill="black" style="white-space: pre" xml:space="preserve" font-family="Inter" font-size="36" font-weight="600" letter-spacing="0em"><tspan x="306" y="415">21:03</tspan></text>
+<rect x="468" y="296" width="1" height="143" fill="black"/>
+<text id="day-forecast-1" fill="black" style="white-space: pre" xml:space="preserve" font-family="Inter" font-size="36" font-weight="600" letter-spacing="0em"><tspan x="484" y="335">Thu</tspan></text>
 <g id="icon-forecast-1"></g>
-<text id="high-low-forecast-1" fill="black" style="white-space: pre" xml:space="preserve" font-family="Inter" font-size="36" font-weight="600" letter-spacing="0em"><tspan x="610" y="335">20&#xb0; / 10&#xb0;</tspan></text>
-<text id="day-forecast-2" fill="black" style="white-space: pre" xml:space="preserve" font-family="Inter" font-size="36" font-weight="600" letter-spacing="0em"><tspan x="460" y="381">Thu</tspan></text>
+<text id="high-low-forecast-1" fill="black" style="white-space: pre" xml:space="preserve" font-family="Inter" font-size="36" font-weight="600" letter-spacing="0em"><tspan x="622" y="335">20&#xb0; / 10&#xb0;</tspan></text>
+<text id="day-forecast-2" fill="black" style="white-space: pre" xml:space="preserve" font-family="Inter" font-size="36" font-weight="600" letter-spacing="0em"><tspan x="484" y="381">Thu</tspan></text>
 <g id="icon-forecast-2"></g>
-<text id="high-low-forecast-2" fill="black" style="white-space: pre" xml:space="preserve" font-family="Inter" font-size="36" font-weight="600" letter-spacing="0em"><tspan x="610" y="381">20&#xb0; / 10&#xb0;</tspan></text>
-<text id="day-forecast-3" fill="black" style="white-space: pre" xml:space="preserve" font-family="Inter" font-size="36" font-weight="600" letter-spacing="0em"><tspan x="460" y="427">Thu</tspan></text>
+<text id="high-low-forecast-2" fill="black" style="white-space: pre" xml:space="preserve" font-family="Inter" font-size="36" font-weight="600" letter-spacing="0em"><tspan x="622" y="381">20&#xb0; / 10&#xb0;</tspan></text>
+<text id="day-forecast-3" fill="black" style="white-space: pre" xml:space="preserve" font-family="Inter" font-size="36" font-weight="600" letter-spacing="0em"><tspan x="484" y="427">Thu</tspan></text>
 <g id="icon-forecast-3"></g>
-<text id="high-low-forecast-3" fill="black" style="white-space: pre" xml:space="preserve" font-family="Inter" font-size="36" font-weight="600" letter-spacing="0em"><tspan x="610" y="427">20&#xb0; / 10&#xb0;</tspan></text>
+<text id="high-low-forecast-3" fill="black" style="white-space: pre" xml:space="preserve" font-family="Inter" font-size="36" font-weight="600" letter-spacing="0em"><tspan x="622" y="427">20&#xb0; / 10&#xb0;</tspan></text>
 </svg>

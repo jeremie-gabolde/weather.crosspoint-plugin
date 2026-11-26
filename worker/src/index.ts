@@ -310,7 +310,7 @@ function insertWeatherIcons(
 	hourly: Array<{ weatherCode: number; isDay: boolean }>,
 	daily: Array<{ weatherCode: number; isDay: boolean }>,
 ): string {
-	const dailyPositions = [[545, 306], [545, 352], [545, 398]];
+	const dailyPositions = [[562, 306], [562, 352], [562, 398]];
 	if (hourly.length !== HOURLY_ICON_POSITIONS.length || daily.length !== dailyPositions.length) {
 		throw new Error('weather icon positions do not match the data template');
 	}
@@ -322,9 +322,9 @@ function insertWeatherIcons(
 			`icon-hour-${index + 1}`,
 			placeWeatherIcon(selectWeatherIcon(forecast.weatherCode, forecast.isDay), HOURLY_ICON_POSITIONS[index][0], HOURLY_ICON_POSITIONS[index][1], 48),
 		] as [string, string]),
-		['icon-umbrella', placeWeatherIcon(umbrella, 99, 312, 32)],
-		['icon-sunrise', placeWeatherIcon(sunrise, 218, 318, 32)],
-		['icon-sunset', placeWeatherIcon(sunset, 218, 386, 32)],
+		['icon-umbrella', placeWeatherIcon(umbrella, 124, 312, 32)],
+		['icon-sunrise', placeWeatherIcon(sunrise, 264, 318, 32)],
+		['icon-sunset', placeWeatherIcon(sunset, 264, 386, 32)],
 		...daily.map((forecast, index) => [
 			`icon-forecast-${index + 1}`,
 			placeWeatherIcon(selectWeatherIcon(forecast.weatherCode, forecast.isDay), dailyPositions[index][0], dailyPositions[index][1], 32),
@@ -380,8 +380,8 @@ function renderSvg(weather: WeatherData, locationName: string, timeFormat: TimeF
 		['hour-now', formatHour(weather.current.time, timeFormat, countryCode)],
 		['text-hour-now', formatTemperature(weather.current.temperature)],
 		['text-high-low', `↑ ${formatTemperature(weather.daily.maximumTemperature[0])}  ↓ ${formatTemperature(weather.daily.minimumTemperature[0])}`],
-		['chance-of-rain', `${Math.round(weather.hourly.precipitationProbability[currentHourIndex])}%`, 115],
-		['rain-amount', `${formatRainAmount(weather.daily.precipitationSum[0])} mm`, 115],
+		['chance-of-rain', `${Math.round(weather.hourly.precipitationProbability[currentHourIndex])}%`, 140],
+		['rain-amount', `${formatRainAmount(weather.daily.precipitationSum[0])} mm`, 140],
 		['sunrise-time', formatHour(weather.daily.sunrise[0], timeFormat, countryCode)],
 		['sunset-time', formatHour(weather.daily.sunset[0], timeFormat, countryCode)],
 	];

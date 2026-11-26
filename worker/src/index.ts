@@ -166,6 +166,7 @@ function formatHour(value: string, timeFormat: TimeFormat, countryCode: string, 
 	const hour = Number(match[1]);
 	const minute = Number(match[2]);
 	if (hour > 23 || minute > 59) return value.slice(11, 16);
+	if (timeFormat !== '12h') return `${match[1]}:${match[2]}`;
 	const requestedLocale = `en-${countryCode}`;
 	const locale = Intl.DateTimeFormat.supportedLocalesOf([requestedLocale]).length ? requestedLocale : 'en-GB';
 	const options: Intl.DateTimeFormatOptions = {
@@ -173,12 +174,10 @@ function formatHour(value: string, timeFormat: TimeFormat, countryCode: string, 
 		minute: '2-digit',
 		timeZone: 'UTC',
 	};
-	if (timeFormat === '12h') options.hour12 = true;
-	if (timeFormat === '24h') options.hour12 = false;
+	options.hour12 = true;
 	const date = new Date(Date.UTC(2020, 0, 1, hour, minute));
 	const formatter = new Intl.DateTimeFormat(locale, options);
-	const uses12HourClock = timeFormat === '12h' || (timeFormat === 'auto' && formatter.resolvedOptions().hourCycle?.startsWith('h1'));
-	if (!compact12Hour || !uses12HourClock) return formatter.format(date);
+	if (!compact12Hour) return formatter.format(date);
 
 	const compactTime = new Intl.DateTimeFormat(locale, {
 		hour: 'numeric',

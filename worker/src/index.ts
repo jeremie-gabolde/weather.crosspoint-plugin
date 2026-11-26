@@ -380,7 +380,7 @@ function renderSvg(weather: WeatherData, locationName: string, timeFormat: TimeF
 		['text-city', locationName, 730, 'end'],
 		['hour-now', formatHour(weather.current.time, timeFormat, countryCode)],
 		['text-hour-now', formatTemperature(weather.current.temperature)],
-		['text-high-low', `H: ${formatTemperature(weather.daily.maximumTemperature[0])} L: ${formatTemperature(weather.daily.minimumTemperature[0])}`],
+		['text-high-low', `↑ ${formatTemperature(weather.daily.maximumTemperature[0])}  ↓ ${formatTemperature(weather.daily.minimumTemperature[0])}`],
 		['chance-of-rain', `${Math.round(weather.hourly.precipitationProbability[currentHourIndex])}%`, 115],
 		['rain-amount', `${formatRainAmount(weather.daily.precipitationSum[0])} mm`, 115],
 		['sunrise-time', formatHour(weather.daily.sunrise[0], timeFormat, countryCode)],
